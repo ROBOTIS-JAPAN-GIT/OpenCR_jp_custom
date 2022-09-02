@@ -1,10 +1,3 @@
-// functions that call "motor_driver"
-//motorPowerCallback
-//publishSensorStateMsg
-//driveTest
-//sendDebuglog
-
-
 /*******************************************************************************
 * Copyright 2016 ROBOTIS CO., LTD.
 *
@@ -22,11 +15,10 @@
 *******************************************************************************/
 
 /* Authors: Yoonseok Pyo, Leon Jung, Darby Lim, HanCheol Cho, Gilbert */
-
-/* Modified Date: August 19th, 2022
+/* Modified Date: September 2nd, 2022
    Modified Contents: Addition of multiple parameters for TurtleBot3 Friends (ROBOTIS JAPAN custom model)
    Modified Authors: Masaya Shoji, Koumei Yamashita, Keith Valentin */
-   
+
 #include "turtlebot3_big_wheel_core_config.h"
 
 /*******************************************************************************
@@ -57,7 +49,7 @@ void setup()
   tf_broadcaster.init(nh);
 
   // Setting for Dynamixel motors
-  motor_initialization_end = motor_driver.init(NAME);
+  motor_driver.init(NAME);
 
   // Setting for IMU
   sensors.init();
@@ -92,18 +84,13 @@ void loop()
 
   if ((t-tTime[0]) >= (1000 / CONTROL_MOTOR_SPEED_FREQUENCY))
   {
-    if (motor_initialization_end)
+    updateGoalVelocity();
+    if ((t-tTime[6]) > CONTROL_MOTOR_TIMEOUT) 
     {
-      updateGoalVelocity();
-      if ((t-tTime[6]) > CONTROL_MOTOR_TIMEOUT) 
-      {
-        motor_driver.controlMotor(WHEEL_RADIUS, WHEEL_SEPARATION, zero_velocity);
-      } 
-      else {
-        motor_driver.controlMotor(WHEEL_RADIUS, WHEEL_SEPARATION, goal_velocity);
-      }
-    } else {
-      motor_initialization_end = motor_driver.init(NAME);
+      motor_driver.controlMotor(WHEEL_RADIUS, WHEEL_SEPARATION, zero_velocity);
+    } 
+    else {
+      motor_driver.controlMotor(WHEEL_RADIUS, WHEEL_SEPARATION, goal_velocity);
     }
     tTime[0] = t;
   }
@@ -116,7 +103,7 @@ void loop()
 
   if ((t-tTime[2]) >= (1000 / DRIVE_INFORMATION_PUBLISH_FREQUENCY))
   {
-    if (motor_initialization_end) publishSensorStateMsg();
+    publishSensorStateMsg();
     publishBatteryStateMsg();
     publishDriveInformation();
     tTime[2] = t;
@@ -205,7 +192,7 @@ void motorPowerCallback(const std_msgs::Bool& power_msg)
 {
   bool dxl_power = power_msg.data;
 
-  if (motor_initialization_end) motor_driver.setTorque(dxl_power);
+  motor_driver.setTorque(dxl_power);
 }
 
 /*******************************************************************************
@@ -575,8 +562,6 @@ bool calcOdometry(double diff_time)
 *******************************************************************************/
 void driveTest(uint8_t buttons)
 {
-  if (! motor_initialization_end) return;
-  
   static bool move[2] = {false, false};
   static int32_t saved_tick[2] = {0, 0};
   static double diff_encoder = 0.0;
