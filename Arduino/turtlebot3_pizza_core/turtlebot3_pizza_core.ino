@@ -15,8 +15,7 @@
 *******************************************************************************/
 
 /* Authors: Yoonseok Pyo, Leon Jung, Darby Lim, HanCheol Cho, Gilbert */
-
-/* Modified Date: August 19th, 2022
+/* Modified Date: September 2nd, 2022
    Modified Contents: Addition of multiple parameters for TurtleBot3 Friends (ROBOTIS JAPAN custom model)
    Modified Authors: Masaya Shoji, Koumei Yamashita, Keith Valentin */
 

@@ -15,14 +15,13 @@
 *******************************************************************************/
 
 /* Authors: Yoonseok Pyo, Leon Jung, Darby Lim, HanCheol Cho, Gilbert */
-
-/* Modified Date: August 19th, 2022
+/* Modified Date: September 2nd, 2022
    Modified Contents: Addition of multiple parameters for TurtleBot3 Friends (ROBOTIS JAPAN custom model)
    Modified Authors: Masaya Shoji, Koumei Yamashita, Keith Valentin */
-
-#ifndef TURTLEBOT3_PIZZA_CORE_CONFIG_H_
-#define TURTLEBOT3_PIZZA_CORE_CONFIG_H_
-#define NOETIC_SUPPORT          //uncomment this if writing code for ROS1 Noetic
+   
+#ifndef TURTLEBOT3_CORE_CONFIG_H_
+#define TURTLEBOT3_CORE_CONFIG_H_
+#define NOETIC_SUPPORT          //uncomm/ent this if writing code for ROS1 Noetic
 
 #include <ros.h>
 #include <ros/time.h>
@@ -195,36 +194,7 @@ static uint32_t tTime[10];
 /*******************************************************************************
 * Declaration for motor
 *******************************************************************************/
-class Turtlebot3MotorDriver2
-{
- public:
-  Turtlebot3MotorDriver2();
-  ~Turtlebot3MotorDriver2();
-  bool init(String turtlebot3);
-  void close(void);
-  bool setTorque(bool onoff);
-  bool getTorque();
-  bool readEncoder(int32_t &left_value, int32_t &right_value);
-  bool writeVelocity(int64_t left_value, int64_t right_value);
-  bool controlMotor(const float wheel_radius, const float wheel_separation, float* value);
-
- private:
-  uint32_t baudrate_;
-  float  protocol_version_;
-  uint8_t left_wheel_id_;
-  uint8_t right_wheel_id_;
-  bool torque_;
-
-  uint16_t dynamixel_limit_max_velocity_;
-
-  dynamixel::PortHandler *portHandler_;
-  dynamixel::PacketHandler *packetHandler_;
-
-  dynamixel::GroupSyncWrite *groupSyncWriteVelocity_;
-  dynamixel::GroupSyncRead *groupSyncReadEncoder_;
-};
-
-Turtlebot3MotorDriver2 motor_driver;
+Turtlebot3MotorDriver motor_driver;
 
 /*******************************************************************************
 * Calculation for odometry
@@ -270,6 +240,5 @@ double odom_vel[3];
 *******************************************************************************/
 bool setup_end        = false;
 uint8_t battery_state = 0;
-bool motor_initialization_end = false;
 
 #endif // TURTLEBOT3_CORE_CONFIG_H_
