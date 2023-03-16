@@ -14,6 +14,10 @@
 * limitations under the License.
 *******************************************************************************/
 
+/* Modified Date: March 16th, 2023
+   Modified Contents: Addition of multiple parameters for TurtleBot3 Friends (ROBOTIS JAPAN custom model)
+   Modified Authors: Masaya Shoji, Koumei Yamashita, Keith Valentin */
+
 #include <TurtleBot3_ROS2.h>
 
 /*******************************************************************************
