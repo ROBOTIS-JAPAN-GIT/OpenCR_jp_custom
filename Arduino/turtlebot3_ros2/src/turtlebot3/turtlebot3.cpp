@@ -65,12 +65,22 @@ static const TB3ModelInfo waffle_with_manipulator_info = {
 };
 
 static const TB3ModelInfo big_wheel_info = {
-  "Big_Wheel_OpenManipulator",
-  2,
+  "Big_Wheel",
+  4,
   0.06225,	// ホイール半径　　(BURGER : 0.033[m], WAFFLE : 0.033 [m], PIZZA : 0.06225 [m], BIG_WHEEL : 0.06225 [m])
   0.29405,	// ホイール間距離　(BURGER : 0.160[m], WAFFLE : 0.287 [m], PIZZA : 0.46485 [m], BIG_WHEEL : 0.29405 [m])
   0.147025,	// 旋回半径　　　　(BURGER : 0.080[m], WAFFLE : 0.1435[m], PIZZA : 0.232425[m], BIG_WHEEL : 0.147025[m])
   0.220,	  // ロボット半径　　(BURGER : 0.105[m], WAFFLE : 0.220 [m], PIZZA : 0.355778[m], BIG_WHEEL : 0.220   [m])
+  false,
+};
+
+static const TB3ModelInfo pizza_info = {
+  "Pizza",
+  5,
+  0.06225,	// ホイール半径　　(BURGER : 0.033[m], WAFFLE : 0.033 [m], PIZZA : 0.06225 [m], BIG_WHEEL : 0.06225 [m])
+  0.46485,	// ホイール間距離　(BURGER : 0.160[m], WAFFLE : 0.287 [m], PIZZA : 0.46485 [m], BIG_WHEEL : 0.29405 [m])
+  0.232425,	// 旋回半径　　　　(BURGER : 0.080[m], WAFFLE : 0.1435[m], PIZZA : 0.232425[m], BIG_WHEEL : 0.147025[m])
+  0.355778, // ロボット半径　　(BURGER : 0.105[m], WAFFLE : 0.220 [m], PIZZA : 0.355778[m], BIG_WHEEL : 0.220   [m])
   false,
 };
 
@@ -351,6 +361,9 @@ void TurtleBot3Core::begin(const char* model_name)
   }else if(strcmp(model_name, "Big_Wheel") == 0 || strcmp(model_name, "big_wheel") == 0){
     p_tb3_model_info = &big_wheel_info;
     model_motor_rpm = 77;
+  }else if(strcmp(model_name, "Pizza") == 0 || strcmp(model_name, "pizza") == 0){
+    p_tb3_model_info = &pizza_info;
+    model_motor_rpm = 53;
   }else{
     p_tb3_model_info = &burger_info;
     model_motor_rpm = 61;
