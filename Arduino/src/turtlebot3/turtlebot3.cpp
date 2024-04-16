@@ -14,11 +14,6 @@
 * limitations under the License.
 *******************************************************************************/
 
-/* Modified Date: March 16th, 2023
-   Modified Contents: Addition of multiple parameters for TurtleBot3 Friends (ROBOTIS JAPAN custom model)
-   Modified Authors: Masaya Shoji, Koumei Yamashita, Keith Valentin */
-
-
 #include "../../include/turtlebot3/turtlebot3.h"
 
 /*******************************************************************************
@@ -57,31 +52,11 @@ static const TB3ModelInfo waffle_info = {
 static const TB3ModelInfo waffle_with_manipulator_info = {
   "Waffle_OpenManipulator",
   3,
-  0.033,
-  0.287,
+  0.06,
+  0.29425,
   0.1435,
   0.220,
   true,
-};
-
-static const TB3ModelInfo big_wheel_info = {
-  "Big_Wheel",
-  4,
-  0.06225,	// ホイール半径　　(BURGER : 0.033[m], WAFFLE : 0.033 [m], PIZZA : 0.06225 [m], BIG_WHEEL : 0.06225 [m])
-  0.29405,	// ホイール間距離　(BURGER : 0.160[m], WAFFLE : 0.287 [m], PIZZA : 0.46485 [m], BIG_WHEEL : 0.29405 [m])
-  0.147025,	// 旋回半径　　　　(BURGER : 0.080[m], WAFFLE : 0.1435[m], PIZZA : 0.232425[m], BIG_WHEEL : 0.147025[m])
-  0.220,	  // ロボット半径　　(BURGER : 0.105[m], WAFFLE : 0.220 [m], PIZZA : 0.355778[m], BIG_WHEEL : 0.220   [m])
-  false,
-};
-
-static const TB3ModelInfo pizza_info = {
-  "Pizza",
-  5,
-  0.06225,	// ホイール半径　　(BURGER : 0.033[m], WAFFLE : 0.033 [m], PIZZA : 0.06225 [m], BIG_WHEEL : 0.06225 [m])
-  0.46485,	// ホイール間距離　(BURGER : 0.160[m], WAFFLE : 0.287 [m], PIZZA : 0.46485 [m], BIG_WHEEL : 0.29405 [m])
-  0.232425,	// 旋回半径　　　　(BURGER : 0.080[m], WAFFLE : 0.1435[m], PIZZA : 0.232425[m], BIG_WHEEL : 0.147025[m])
-  0.355778, // ロボット半径　　(BURGER : 0.105[m], WAFFLE : 0.220 [m], PIZZA : 0.355778[m], BIG_WHEEL : 0.220   [m])
-  false,
 };
 
 
@@ -219,55 +194,69 @@ enum ControlTableItemAddr{
   ADDR_GOAL_POSITION_JOINT_2    = 204,
   ADDR_GOAL_POSITION_JOINT_3    = 208,
   ADDR_GOAL_POSITION_JOINT_4    = 212,
-  ADDR_GOAL_POSITION_GRIPPER    = 216,
-  ADDR_GOAL_POSITION_WR_JOINT   = 220,
-  ADDR_GOAL_POSITION_WR_GRIPPER = 221,
-  ADDR_GOAL_POSITION_RD         = 222,
+  ADDR_GOAL_POSITION_JOINT_5    = 216,
+  ADDR_GOAL_POSITION_JOINT_6    = 220,
+  ADDR_GOAL_POSITION_GRIPPER    = 224,
+  ADDR_GOAL_POSITION_WR_JOINT   = 228,
+  ADDR_GOAL_POSITION_WR_GRIPPER = 229,
+  ADDR_GOAL_POSITION_RD         = 230,
 
-  ADDR_PRESENT_POSITION_JOINT_1 = 224,
-  ADDR_PRESENT_POSITION_JOINT_2 = 228,
-  ADDR_PRESENT_POSITION_JOINT_3 = 232,
-  ADDR_PRESENT_POSITION_JOINT_4 = 236,
-  ADDR_PRESENT_POSITION_GRIPPER = 240,
+  ADDR_PRESENT_POSITION_JOINT_1 = 232,
+  ADDR_PRESENT_POSITION_JOINT_2 = 236,
+  ADDR_PRESENT_POSITION_JOINT_3 = 240,
+  ADDR_PRESENT_POSITION_JOINT_4 = 244,
+  ADDR_PRESENT_POSITION_JOINT_5 = 248,
+  ADDR_PRESENT_POSITION_JOINT_6 = 252,
+  ADDR_PRESENT_POSITION_GRIPPER = 256,
 
-  ADDR_PRESENT_VELOCITY_JOINT_1 = 244,
-  ADDR_PRESENT_VELOCITY_JOINT_2 = 248,
-  ADDR_PRESENT_VELOCITY_JOINT_3 = 252,
-  ADDR_PRESENT_VELOCITY_JOINT_4 = 256,
-  ADDR_PRESENT_VELOCITY_GRIPPER = 260,
+  ADDR_PRESENT_VELOCITY_JOINT_1 = 260,
+  ADDR_PRESENT_VELOCITY_JOINT_2 = 264,
+  ADDR_PRESENT_VELOCITY_JOINT_3 = 268,
+  ADDR_PRESENT_VELOCITY_JOINT_4 = 272,
+  ADDR_PRESENT_VELOCITY_JOINT_5 = 276,
+  ADDR_PRESENT_VELOCITY_JOINT_6 = 280,
+  ADDR_PRESENT_VELOCITY_GRIPPER = 284,
 
-  ADDR_PRESENT_CURRENT_JOINT_1  = 264,
-  ADDR_PRESENT_CURRENT_JOINT_2  = 266,
-  ADDR_PRESENT_CURRENT_JOINT_3  = 268,
-  ADDR_PRESENT_CURRENT_JOINT_4  = 270,
-  ADDR_PRESENT_CURRENT_GRIPPER  = 272,
+  ADDR_PRESENT_CURRENT_JOINT_1  = 288,
+  ADDR_PRESENT_CURRENT_JOINT_2  = 290,
+  ADDR_PRESENT_CURRENT_JOINT_3  = 292,
+  ADDR_PRESENT_CURRENT_JOINT_4  = 294,
+  ADDR_PRESENT_CURRENT_JOINT_5  = 296,
+  ADDR_PRESENT_CURRENT_JOINT_6  = 298,
+  ADDR_PRESENT_CURRENT_GRIPPER  = 300,
 
-  ADDR_PROFILE_ACC_JOINT_1      = 284,
-  ADDR_PROFILE_ACC_JOINT_2      = 288,
-  ADDR_PROFILE_ACC_JOINT_3      = 292,
-  ADDR_PROFILE_ACC_JOINT_4      = 296,
-  ADDR_PROFILE_ACC_GRIPPER      = 300,
-  ADDR_PROFILE_ACC_WR_JOINT     = 304,
-  ADDR_PROFILE_ACC_WR_GRIPPER   = 305,
-  ADDR_PROFILE_ACC_RD           = 306,
+  ADDR_PROFILE_ACC_JOINT_1      = 312,
+  ADDR_PROFILE_ACC_JOINT_2      = 316,
+  ADDR_PROFILE_ACC_JOINT_3      = 320,
+  ADDR_PROFILE_ACC_JOINT_4      = 324,
+  ADDR_PROFILE_ACC_JOINT_5      = 328,
+  ADDR_PROFILE_ACC_JOINT_6      = 332,
+  ADDR_PROFILE_ACC_GRIPPER      = 336,
+  ADDR_PROFILE_ACC_WR_JOINT     = 340,
+  ADDR_PROFILE_ACC_WR_GRIPPER   = 341,
+  ADDR_PROFILE_ACC_RD           = 342,
 
-  ADDR_PROFILE_VEL_JOINT_1      = 308,
-  ADDR_PROFILE_VEL_JOINT_2      = 312,
-  ADDR_PROFILE_VEL_JOINT_3      = 316,
-  ADDR_PROFILE_VEL_JOINT_4      = 320,
-  ADDR_PROFILE_VEL_GRIPPER      = 324,
-  ADDR_PROFILE_VEL_WR_JOINT     = 328,
-  ADDR_PROFILE_VEL_WR_GRIPPER   = 329,
-  ADDR_PROFILE_VEL_RD           = 330,
+  ADDR_PROFILE_VEL_JOINT_1      = 344,
+  ADDR_PROFILE_VEL_JOINT_2      = 348,
+  ADDR_PROFILE_VEL_JOINT_3      = 352,
+  ADDR_PROFILE_VEL_JOINT_4      = 356,
+  ADDR_PROFILE_VEL_JOINT_5      = 360,
+  ADDR_PROFILE_VEL_JOINT_6      = 364,
+  ADDR_PROFILE_VEL_GRIPPER      = 368,
+  ADDR_PROFILE_VEL_WR_JOINT     = 372,
+  ADDR_PROFILE_VEL_WR_GRIPPER   = 373,
+  ADDR_PROFILE_VEL_RD           = 374,
 
-  ADDR_GOAL_CURRENT_JOINT_1     = 332,
-  ADDR_GOAL_CURRENT_JOINT_2     = 334,
-  ADDR_GOAL_CURRENT_JOINT_3     = 336,
-  ADDR_GOAL_CURRENT_JOINT_4     = 338,
-  ADDR_GOAL_CURRENT_GRIPPER     = 340,  
-  ADDR_GOAL_CURRENT_WR_JOINT    = 342,
-  ADDR_GOAL_CURRENT_WR_GRIPPER  = 343,
-  ADDR_GOAL_CURRENT_RD          = 344,
+  ADDR_GOAL_CURRENT_JOINT_1     = 376,
+  ADDR_GOAL_CURRENT_JOINT_2     = 378,
+  ADDR_GOAL_CURRENT_JOINT_3     = 380,
+  ADDR_GOAL_CURRENT_JOINT_4     = 382,
+  ADDR_GOAL_CURRENT_JOINT_5     = 384,
+  ADDR_GOAL_CURRENT_JOINT_6     = 386,
+  ADDR_GOAL_CURRENT_GRIPPER     = 388,  
+  ADDR_GOAL_CURRENT_WR_JOINT    = 390,
+  ADDR_GOAL_CURRENT_WR_GRIPPER  = 391,
+  ADDR_GOAL_CURRENT_RD          = 392,
 
 };
 
@@ -358,12 +347,6 @@ void TurtleBot3Core::begin(const char* model_name)
   }else if(strcmp(model_name, "Waffle_OpenManipulator") == 0){
     p_tb3_model_info = &waffle_with_manipulator_info;
     model_motor_rpm = 77;
-  }else if(strcmp(model_name, "Big_Wheel") == 0 || strcmp(model_name, "big_wheel") == 0){
-    p_tb3_model_info = &big_wheel_info;
-    model_motor_rpm = 77;
-  }else if(strcmp(model_name, "Pizza") == 0 || strcmp(model_name, "pizza") == 0){
-    p_tb3_model_info = &pizza_info;
-    model_motor_rpm = 53;
   }else{
     p_tb3_model_info = &burger_info;
     model_motor_rpm = 61;
@@ -504,6 +487,8 @@ void TurtleBot3Core::begin(const char* model_name)
     dxl_slave.addControlItem(ADDR_GOAL_POSITION_JOINT_2, control_items.joint_goal_position.value[JOINT_2]);
     dxl_slave.addControlItem(ADDR_GOAL_POSITION_JOINT_3, control_items.joint_goal_position.value[JOINT_3]);
     dxl_slave.addControlItem(ADDR_GOAL_POSITION_JOINT_4, control_items.joint_goal_position.value[JOINT_4]);
+    dxl_slave.addControlItem(ADDR_GOAL_POSITION_JOINT_5, control_items.joint_goal_position.value[JOINT_5]);
+    dxl_slave.addControlItem(ADDR_GOAL_POSITION_JOINT_6, control_items.joint_goal_position.value[JOINT_6]);
     dxl_slave.addControlItem(ADDR_GOAL_POSITION_GRIPPER, control_items.joint_goal_position.value[GRIPPER]);
     dxl_slave.addControlItem(ADDR_GOAL_POSITION_WR_JOINT, control_items.joint_goal_position_wr_joint);
     dxl_slave.addControlItem(ADDR_GOAL_POSITION_WR_GRIPPER, control_items.joint_goal_position_wr_gripper);
@@ -513,24 +498,32 @@ void TurtleBot3Core::begin(const char* model_name)
     dxl_slave.addControlItem(ADDR_PRESENT_POSITION_JOINT_2, control_items.joint_present_position.value[JOINT_2]);
     dxl_slave.addControlItem(ADDR_PRESENT_POSITION_JOINT_3, control_items.joint_present_position.value[JOINT_3]);
     dxl_slave.addControlItem(ADDR_PRESENT_POSITION_JOINT_4, control_items.joint_present_position.value[JOINT_4]);
+    dxl_slave.addControlItem(ADDR_PRESENT_POSITION_JOINT_5, control_items.joint_present_position.value[JOINT_5]);
+    dxl_slave.addControlItem(ADDR_PRESENT_POSITION_JOINT_6, control_items.joint_present_position.value[JOINT_6]);
     dxl_slave.addControlItem(ADDR_PRESENT_POSITION_GRIPPER, control_items.joint_present_position.value[GRIPPER]);
 
     dxl_slave.addControlItem(ADDR_PRESENT_VELOCITY_JOINT_1, control_items.joint_present_velocity.value[JOINT_1]);
     dxl_slave.addControlItem(ADDR_PRESENT_VELOCITY_JOINT_2, control_items.joint_present_velocity.value[JOINT_2]);
     dxl_slave.addControlItem(ADDR_PRESENT_VELOCITY_JOINT_3, control_items.joint_present_velocity.value[JOINT_3]);
     dxl_slave.addControlItem(ADDR_PRESENT_VELOCITY_JOINT_4, control_items.joint_present_velocity.value[JOINT_4]);
+    dxl_slave.addControlItem(ADDR_PRESENT_VELOCITY_JOINT_5, control_items.joint_present_velocity.value[JOINT_5]);
+    dxl_slave.addControlItem(ADDR_PRESENT_VELOCITY_JOINT_6, control_items.joint_present_velocity.value[JOINT_6]);
     dxl_slave.addControlItem(ADDR_PRESENT_VELOCITY_GRIPPER, control_items.joint_present_velocity.value[GRIPPER]);
 
     dxl_slave.addControlItem(ADDR_PRESENT_CURRENT_JOINT_1, control_items.joint_present_current.value[JOINT_1]);
     dxl_slave.addControlItem(ADDR_PRESENT_CURRENT_JOINT_2, control_items.joint_present_current.value[JOINT_2]);
     dxl_slave.addControlItem(ADDR_PRESENT_CURRENT_JOINT_3, control_items.joint_present_current.value[JOINT_3]);
     dxl_slave.addControlItem(ADDR_PRESENT_CURRENT_JOINT_4, control_items.joint_present_current.value[JOINT_4]);
+    dxl_slave.addControlItem(ADDR_PRESENT_CURRENT_JOINT_5, control_items.joint_present_current.value[JOINT_5]);
+    dxl_slave.addControlItem(ADDR_PRESENT_CURRENT_JOINT_6, control_items.joint_present_current.value[JOINT_6]);
     dxl_slave.addControlItem(ADDR_PRESENT_CURRENT_GRIPPER, control_items.joint_present_current.value[GRIPPER]);
 
     dxl_slave.addControlItem(ADDR_PROFILE_ACC_JOINT_1, control_items.joint_profile_acc.value[JOINT_1]);
     dxl_slave.addControlItem(ADDR_PROFILE_ACC_JOINT_2, control_items.joint_profile_acc.value[JOINT_2]);
     dxl_slave.addControlItem(ADDR_PROFILE_ACC_JOINT_3, control_items.joint_profile_acc.value[JOINT_3]);
     dxl_slave.addControlItem(ADDR_PROFILE_ACC_JOINT_4, control_items.joint_profile_acc.value[JOINT_4]);
+    dxl_slave.addControlItem(ADDR_PROFILE_ACC_JOINT_5, control_items.joint_profile_acc.value[JOINT_5]);
+    dxl_slave.addControlItem(ADDR_PROFILE_ACC_JOINT_6, control_items.joint_profile_acc.value[JOINT_6]);
     dxl_slave.addControlItem(ADDR_PROFILE_ACC_GRIPPER, control_items.joint_profile_acc.value[GRIPPER]);
     dxl_slave.addControlItem(ADDR_PROFILE_ACC_WR_JOINT, control_items.joint_profile_acc_wr_joint);
     dxl_slave.addControlItem(ADDR_PROFILE_ACC_WR_GRIPPER, control_items.joint_profile_acc_wr_gripper);
@@ -540,6 +533,8 @@ void TurtleBot3Core::begin(const char* model_name)
     dxl_slave.addControlItem(ADDR_PROFILE_VEL_JOINT_2, control_items.joint_profile_vel.value[JOINT_2]);
     dxl_slave.addControlItem(ADDR_PROFILE_VEL_JOINT_3, control_items.joint_profile_vel.value[JOINT_3]);
     dxl_slave.addControlItem(ADDR_PROFILE_VEL_JOINT_4, control_items.joint_profile_vel.value[JOINT_4]);
+    dxl_slave.addControlItem(ADDR_PROFILE_VEL_JOINT_5, control_items.joint_profile_vel.value[JOINT_5]);
+    dxl_slave.addControlItem(ADDR_PROFILE_VEL_JOINT_6, control_items.joint_profile_vel.value[JOINT_6]);
     dxl_slave.addControlItem(ADDR_PROFILE_VEL_GRIPPER, control_items.joint_profile_vel.value[GRIPPER]);
     dxl_slave.addControlItem(ADDR_PROFILE_VEL_WR_JOINT, control_items.joint_profile_vel_wr_joint);
     dxl_slave.addControlItem(ADDR_PROFILE_VEL_WR_GRIPPER, control_items.joint_profile_vel_wr_gripper);
@@ -549,6 +544,8 @@ void TurtleBot3Core::begin(const char* model_name)
     dxl_slave.addControlItem(ADDR_GOAL_CURRENT_JOINT_2, control_items.joint_goal_current.value[JOINT_2]);
     dxl_slave.addControlItem(ADDR_GOAL_CURRENT_JOINT_3, control_items.joint_goal_current.value[JOINT_3]);
     dxl_slave.addControlItem(ADDR_GOAL_CURRENT_JOINT_4, control_items.joint_goal_current.value[JOINT_4]);
+    dxl_slave.addControlItem(ADDR_GOAL_CURRENT_JOINT_5, control_items.joint_goal_current.value[JOINT_5]);
+    dxl_slave.addControlItem(ADDR_GOAL_CURRENT_JOINT_6, control_items.joint_goal_current.value[JOINT_6]);
     dxl_slave.addControlItem(ADDR_GOAL_CURRENT_GRIPPER, control_items.joint_goal_current.value[GRIPPER]);
     dxl_slave.addControlItem(ADDR_GOAL_CURRENT_WR_JOINT, control_items.joint_goal_current_wr_joint);
     dxl_slave.addControlItem(ADDR_GOAL_CURRENT_WR_GRIPPER, control_items.joint_goal_current_wr_gripper);

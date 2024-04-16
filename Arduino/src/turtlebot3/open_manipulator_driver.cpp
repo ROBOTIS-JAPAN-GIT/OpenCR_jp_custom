@@ -21,8 +21,10 @@
 const uint8_t DXL_MOTOR_ID_JOINT_1 = 11; 
 const uint8_t DXL_MOTOR_ID_JOINT_2 = 12; 
 const uint8_t DXL_MOTOR_ID_JOINT_3 = 13; 
-const uint8_t DXL_MOTOR_ID_JOINT_4 = 14; 
-const uint8_t DXL_MOTOR_ID_GRIPPER = 15; 
+const uint8_t DXL_MOTOR_ID_JOINT_4 = 14;
+const uint8_t DXL_MOTOR_ID_JOINT_5 = 15;
+const uint8_t DXL_MOTOR_ID_JOINT_6 = 16;
+const uint8_t DXL_MOTOR_ID_GRIPPER = 17; 
 
 static ParamForSyncReadInst_t sync_read_param;
 static ParamForSyncWriteInst_t sync_write_param;
@@ -40,6 +42,8 @@ OpenManipulatorDriver::OpenManipulatorDriver(Dynamixel2Arduino &dxl_param)
   motor_id_[JOINT_2] = DXL_MOTOR_ID_JOINT_2;
   motor_id_[JOINT_3] = DXL_MOTOR_ID_JOINT_3;
   motor_id_[JOINT_4] = DXL_MOTOR_ID_JOINT_4;
+  motor_id_[JOINT_5] = DXL_MOTOR_ID_JOINT_5;
+  motor_id_[JOINT_6] = DXL_MOTOR_ID_JOINT_6;
   motor_id_[GRIPPER] = DXL_MOTOR_ID_GRIPPER;
 }
 
