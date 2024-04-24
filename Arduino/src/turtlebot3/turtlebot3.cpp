@@ -54,7 +54,7 @@ static const TB3ModelInfo waffle_with_manipulator_info = {
   3,
   0.06,
   0.29425,
-  0.1435,
+  0.147125,
   0.220,
   true,
 };
