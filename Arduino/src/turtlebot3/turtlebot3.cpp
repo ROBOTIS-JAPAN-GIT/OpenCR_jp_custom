@@ -17,7 +17,9 @@
 /* Modified Date: March 16th, 2023
    Modified Contents: Addition of multiple parameters for TurtleBot3 Friends (ROBOTIS JAPAN custom model)
    Modified Authors: Masaya Shoji, Koumei Yamashita, Keith Valentin */
-
+/* Modified Date: May 5th, 2024
+   Modified Contents: Corrected wheel size (ROBOTIS JAPAN custom model)
+   Modified Authors: Masaya Shoji, Keisuke Nagashima*/
 
 #include "../../include/turtlebot3/turtlebot3.h"
 
@@ -67,7 +69,7 @@ static const TB3ModelInfo waffle_with_manipulator_info = {
 static const TB3ModelInfo big_wheel_info = {
   "Big_Wheel",
   4,
-  0.06225,	// ホイール半径　　(BURGER : 0.033[m], WAFFLE : 0.033 [m], PIZZA : 0.06225 [m], BIG_WHEEL : 0.06225 [m])
+  0.06,	// ホイール半径　　(BURGER : 0.033[m], WAFFLE : 0.033 [m], PIZZA : 0.06225 [m], BIG_WHEEL : 0.06225 [m])
   0.29405,	// ホイール間距離　(BURGER : 0.160[m], WAFFLE : 0.287 [m], PIZZA : 0.46485 [m], BIG_WHEEL : 0.29405 [m])
   0.147025,	// 旋回半径　　　　(BURGER : 0.080[m], WAFFLE : 0.1435[m], PIZZA : 0.232425[m], BIG_WHEEL : 0.147025[m])
   0.220,	  // ロボット半径　　(BURGER : 0.105[m], WAFFLE : 0.220 [m], PIZZA : 0.355778[m], BIG_WHEEL : 0.220   [m])
