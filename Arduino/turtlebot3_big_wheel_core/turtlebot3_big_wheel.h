@@ -18,13 +18,16 @@
 /* Modified Date: September 2nd, 2022
    Modified Contents: Addition of multiple parameters for TurtleBot3 Friends (ROBOTIS JAPAN custom model)
    Modified Authors: Masaya Shoji, Koumei Yamashita, Keith Valentin */
+/* Modified Date: May 7th, 2024
+   Modified Contents: Corrected wheel size (ROBOTIS JAPAN custom model)
+   Modified Authors: Masaya Shoji, Keisuke Nagashima*/
 
 #ifndef TURTLEBOT3_BIG_WHEEL_H_
 #define TURTLEBOT3_BIG_WHEEL_H_
 
 #define NAME                             "Big Wheel"
 
-#define WHEEL_RADIUS                     0.06225           //  (BURGER : 0.033[m], WAFFLE : 0.033[m], PIZZA : 0.06225[m], BIG_WHEEL : 0.06225[m])
+#define WHEEL_RADIUS                     0.06              //  (BURGER : 0.033[m], WAFFLE : 0.033[m], PIZZA : 0.06225[m], BIG_WHEEL : 0.06225[m])
 #define WHEEL_SEPARATION                 0.29405           //  (BURGER : 0.160[m], WAFFLE : 0.287[m], PIZZA : 0.46485[m], BIG_WHEEL : 0.29405[m])
 #define TURNING_RADIUS                   0.147025          //  (BURGER : 0.080[m], WAFFLE : 0.1435[m], PIZZA : 0.232425[m], BIG_WHEEL : 0.147025[m])
 #define ROBOT_RADIUS                     0.220             //  (BURGER : 0.105[m], WAFFLE : 0.220[m], PIZZA : 0.355778[m], BIG_WHEEL : 0.220[m])
