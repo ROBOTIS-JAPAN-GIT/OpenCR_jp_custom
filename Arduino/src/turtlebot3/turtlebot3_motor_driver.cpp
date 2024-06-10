@@ -21,9 +21,9 @@
 // 77 / 0.229 (RPM) = 336.24454...
 const uint16_t LIMIT_X_MAX_VELOCITY = 337; 
 // V = r * w = r     *        (RPM             * 0.10472)
-//           = 0.033 * (0.229 * Goal_Velocity) * 0.10472
-// Goal_Velocity = V * 1263.632956882
-const float VELOCITY_CONSTANT_VALUE = 1263.632956882; 
+//           = 0.06 * (0.229 * Goal_Velocity) * 0.10472
+// Goal_Velocity = V * 694.998029681
+const float VELOCITY_CONSTANT_VALUE = 694.998029681;
 
 /* DYNAMIXEL Information for controlling motors and  */
 const uint8_t DXL_MOTOR_ID_LEFT = 1; // ID of left motor
