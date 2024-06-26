@@ -50,7 +50,7 @@ static const TB3ModelInfo waffle_info = {
 };
 
 static const TB3ModelInfo waffle_with_manipulator_info = {
-  "Waffle_OpenManipulator",
+  "Lime",
   3,
   0.06,
   0.29425,
@@ -78,9 +78,9 @@ static float goal_velocity_from_button[MortorLocation::MOTOR_NUM_MAX] = {0.0, 0.
 static void update_goal_velocity_from_3values(void);
 static void test_motors_with_buttons(uint8_t buttons);
 static bool get_connection_state_with_motors();
-static void set_connection_state_with_motors(bool is_connected);
+static void read_connection_state_with_motors();
 static bool get_connection_state_with_joints();
-static void set_connection_state_with_joints(bool is_connected);
+static void read_connection_state_with_joints();
 
 /*******************************************************************************
 * Declaration for sensors
@@ -107,6 +107,7 @@ const float PROTOCOL_VERSION_DXL_SLAVE = 2.0;
 const uint32_t HEARTBEAT_TIMEOUT_MS = 500;
 
 static void dxl_slave_write_callback_func(uint16_t addr, uint8_t &dxl_err_code, void* arg);
+static void dxl_slave_read_callback_func(uint16_t addr, uint8_t& dxl_err_code, void* arg);
 
 static bool get_connection_state_with_ros2_node();
 static void set_connection_state_with_ros2_node(bool is_connected);
@@ -344,7 +345,7 @@ void TurtleBot3Core::begin(const char* model_name)
   }else if(strcmp(model_name, "Waffle") == 0 || strcmp(model_name, "waffle") == 0){
     p_tb3_model_info = &waffle_info;
     model_motor_rpm = 77;
-  }else if(strcmp(model_name, "Waffle_OpenManipulator") == 0){
+  }else if(strcmp(model_name, "Lime") == 0){
     p_tb3_model_info = &waffle_with_manipulator_info;
     model_motor_rpm = 77;
   }else{
@@ -360,7 +361,7 @@ void TurtleBot3Core::begin(const char* model_name)
   bool ret; (void)ret;
   DEBUG_SERIAL_BEGIN(57600);
   DEBUG_PRINTLN(" ");
-  DEBUG_PRINTLN("Version : V221004R1");
+  DEBUG_PRINTLN("Version : V240624R1");
   DEBUG_PRINTLN("Begin Start...");
 
   // Setting for Dynamixel motors
@@ -555,35 +556,15 @@ void TurtleBot3Core::begin(const char* model_name)
   // Set user callback function for processing write command from master.
   dxl_slave.setWriteCallbackFunc(dxl_slave_write_callback_func);
 
+  // Set user callback function for processing read command from master.
+  dxl_slave.setReadCallbackFunc(dxl_slave_read_callback_func);
+
   // Check connection state with motors.
-  if(motor_driver.is_connected() == true){
-    motor_driver.set_torque(true);
-    control_items.device_status = STATUS_RUNNING;
-    set_connection_state_with_motors(true);
-    DEBUG_PRINTLN("Wheel motors are connected");
-  }else{
-    control_items.device_status = STATUS_NOT_CONNECTED_MOTORS;
-    set_connection_state_with_motors(false);
-    DEBUG_PRINTLN("Can't communicate with the motor!");
-    DEBUG_PRINTLN("  Please check the connection to the motor and the power supply.");
-    DEBUG_PRINTLN();
-  } 
-  control_items.is_connect_motors = get_connection_state_with_motors();  
+  read_connection_state_with_motors();
 
   if (p_tb3_model_info->has_manipulator == true) {
     // Check connection state with joints.
-    if(manipulator_driver.is_connected() == true){
-      manipulator_driver.set_torque(true);    
-      control_items.is_connect_manipulator = true;
-      set_connection_state_with_joints(true);
-      DEBUG_PRINTLN("Joint motors are connected");      
-    }else{
-      control_items.is_connect_manipulator = false;
-      set_connection_state_with_joints(false);
-      DEBUG_PRINTLN("Can't communicate with the joint!");
-      DEBUG_PRINTLN("  Please check the connection to the joint motor and the power supply.");
-      DEBUG_PRINTLN();
-    } 
+    read_connection_state_with_joints();
   }
 
   // Init IMU 
@@ -952,6 +933,22 @@ static void dxl_slave_write_callback_func(uint16_t item_addr, uint8_t &dxl_err_c
   }
 }
 
+/*******************************************************************************
+ * Callback function definition to be used in communication with the ROS2 node.
+ *******************************************************************************/
+static void dxl_slave_read_callback_func(uint16_t item_addr, uint8_t& dxl_err_code, void* arg) {
+    (void)arg;
+
+    switch (item_addr) {
+        case ADDR_CONNECT_MANIP:
+            read_connection_state_with_joints();
+            break;
+        case ADDR_MOTOR_CONNECT:
+            read_connection_state_with_motors();
+            control_items.is_connect_motors = get_connection_state_with_motors();
+            break;
+    }
+}
 
 /*******************************************************************************
 * Function definition to check the connection status with the ROS2 node.
@@ -1006,9 +1003,22 @@ static bool get_connection_state_with_motors()
   return is_connected_motors;
 }
 
-static void set_connection_state_with_motors(bool is_connected)
+static void read_connection_state_with_motors()
 {
-  is_connected_motors = is_connected;
+    if (motor_driver.is_connected() == true) {
+        motor_driver.set_torque(true);
+        control_items.device_status = STATUS_RUNNING;
+        is_connected_motors = true;
+        control_items.is_connect_motors = true;
+        DEBUG_PRINTLN("Wheel motors are connected");
+    } else {
+        control_items.device_status = STATUS_NOT_CONNECTED_MOTORS;
+        is_connected_motors = false;
+        control_items.is_connect_motors = false;
+        DEBUG_PRINTLN("Can't communicate with the motor!");
+        DEBUG_PRINTLN("  Please check the connection to the motor and the power supply.");
+        DEBUG_PRINTLN();
+    }
 }
 
 /*******************************************************************************
@@ -1021,9 +1031,20 @@ static bool get_connection_state_with_joints()
   return is_connected_joints;
 }
 
-static void set_connection_state_with_joints(bool is_connected)
+static void read_connection_state_with_joints()
 {
-  is_connected_joints = is_connected;
+    if (manipulator_driver.is_connected() == true) {
+        manipulator_driver.set_torque(true);
+        is_connected_joints = true;
+        control_items.is_connect_manipulator = true;
+        DEBUG_PRINTLN("Joint motors are connected");
+    } else {
+        is_connected_joints = false;
+        control_items.is_connect_manipulator = false;
+        DEBUG_PRINTLN("Can't communicate with the joint!");
+        DEBUG_PRINTLN("  Please check the connection to the joint motor and the power supply.");
+        DEBUG_PRINTLN();
+    }
 }
 
 /*******************************************************************************
