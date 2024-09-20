@@ -945,7 +945,6 @@ static void dxl_slave_read_callback_func(uint16_t item_addr, uint8_t& dxl_err_co
             break;
         case ADDR_MOTOR_CONNECT:
             read_connection_state_with_motors();
-            control_items.is_connect_motors = get_connection_state_with_motors();
             break;
     }
 }
@@ -1005,7 +1004,7 @@ static bool get_connection_state_with_motors()
 
 static void read_connection_state_with_motors()
 {
-    if (motor_driver.is_connected() == true) {
+    if (motor_driver.is_connected()) {
         motor_driver.set_torque(true);
         control_items.device_status = STATUS_RUNNING;
         is_connected_motors = true;
@@ -1033,7 +1032,7 @@ static bool get_connection_state_with_joints()
 
 static void read_connection_state_with_joints()
 {
-    if (manipulator_driver.is_connected() == true) {
+    if (manipulator_driver.is_connected()) {
         manipulator_driver.set_torque(true);
         is_connected_joints = true;
         control_items.is_connect_manipulator = true;
