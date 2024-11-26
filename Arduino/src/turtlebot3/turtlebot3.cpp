@@ -107,7 +107,6 @@ const float PROTOCOL_VERSION_DXL_SLAVE = 2.0;
 const uint32_t HEARTBEAT_TIMEOUT_MS = 500;
 
 static void dxl_slave_write_callback_func(uint16_t addr, uint8_t &dxl_err_code, void* arg);
-static void dxl_slave_read_callback_func(uint16_t addr, uint8_t& dxl_err_code, void* arg);
 
 static bool get_connection_state_with_ros2_node();
 static void set_connection_state_with_ros2_node(bool is_connected);
@@ -556,9 +555,6 @@ void TurtleBot3Core::begin(const char* model_name)
   // Set user callback function for processing write command from master.
   dxl_slave.setWriteCallbackFunc(dxl_slave_write_callback_func);
 
-  // Set user callback function for processing read command from master.
-  dxl_slave.setReadCallbackFunc(dxl_slave_read_callback_func);
-
   // Check connection state with motors.
   read_connection_state_with_motors();
 
@@ -749,20 +745,17 @@ void update_motor_status(uint32_t interval_ms)
   if(millis() - pre_time >= interval_ms){
     pre_time = millis();
 
-
-    uint32_t pre_time_dxl;
-
-    pre_time_dxl = millis();
-    if(get_connection_state_with_motors() == true){
-      motor_driver.read_present_position(control_items.present_position[MortorLocation::LEFT], control_items.present_position[MortorLocation::RIGHT]);
-      motor_driver.read_present_velocity(control_items.present_velocity[MortorLocation::LEFT], control_items.present_velocity[MortorLocation::RIGHT]);
-      if(motor_driver.read_present_current(current_l, current_r) == true){
-        control_items.present_current[MortorLocation::LEFT] = current_l;
-        control_items.present_current[MortorLocation::RIGHT] = current_r;
-      }
-
+  if(get_connection_state_with_motors()&&
+     motor_driver.read_present_position(control_items.present_position[MortorLocation::LEFT], control_items.present_position[MortorLocation::RIGHT])&&
+     motor_driver.read_present_velocity(control_items.present_velocity[MortorLocation::LEFT], control_items.present_velocity[MortorLocation::RIGHT])&&
+     motor_driver.read_present_current(current_l, current_r)
+    ){
+      control_items.present_current[MortorLocation::LEFT] = current_l;
+      control_items.present_current[MortorLocation::RIGHT] = current_r;
       control_items.motor_torque_enable_state = motor_driver.get_torque();
-    }
+    }else{
+      read_connection_state_with_motors();
+    } 
   }  
 }
 
@@ -773,13 +766,14 @@ void update_joint_status(uint32_t interval_ms)
   if(millis() - pre_time >= interval_ms){
     pre_time = millis();
 
-    manipulator_driver.read_present_position(control_items.joint_present_position);
-    manipulator_driver.read_present_velocity(control_items.joint_present_velocity);
-    manipulator_driver.read_present_current(control_items.joint_present_current);
-
-    if(get_connection_state_with_joints() == true){
-
+    if(get_connection_state_with_joints()&&
+       manipulator_driver.read_present_position(control_items.joint_present_position)&&
+       manipulator_driver.read_present_velocity(control_items.joint_present_velocity)&&
+       manipulator_driver.read_present_current(control_items.joint_present_current)
+    ){
       control_items.joint_torque_enable_state = manipulator_driver.get_torque();
+    }else{
+      read_connection_state_with_joints();
     }
   }  
 }
@@ -931,22 +925,6 @@ static void dxl_slave_write_callback_func(uint16_t item_addr, uint8_t &dxl_err_c
       control_items.joint_goal_current_rd = false;
       break;        
   }
-}
-
-/*******************************************************************************
- * Callback function definition to be used in communication with the ROS2 node.
- *******************************************************************************/
-static void dxl_slave_read_callback_func(uint16_t item_addr, uint8_t& dxl_err_code, void* arg) {
-    (void)arg;
-
-    switch (item_addr) {
-        case ADDR_CONNECT_MANIP:
-            read_connection_state_with_joints();
-            break;
-        case ADDR_MOTOR_CONNECT:
-            read_connection_state_with_motors();
-            break;
-    }
 }
 
 /*******************************************************************************
